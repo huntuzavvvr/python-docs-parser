@@ -1,10 +1,8 @@
-from urllib.parse import urljoin
-from constants import BASE_DIR, MAIN_DOC_URL
-import requests_cache
-from bs4 import BeautifulSoup
-from tqdm import tqdm
 import re
-from pathlib import Path
+from urllib.parse import urljoin
+import requests_cache
+from tqdm import tqdm
+from bs4 import BeautifulSoup
 from constants import BASE_DIR, MAIN_DOC_URL
 from configs import configure_parser
 
