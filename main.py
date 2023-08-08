@@ -9,9 +9,8 @@ from constants import BASE_DIR, MAIN_DOC_URL
 from configs import configure_parser
 
 
-def whats_new():
+def whats_new(session):
     whats_new_url = urljoin(MAIN_DOC_URL, 'whatsnew/')
-    session = requests_cache.CachedSession()
     response = session.get(whats_new_url)
     response.encoding = "utf-8"
     soup = BeautifulSoup(response.text, 'lxml')
@@ -36,8 +35,7 @@ def whats_new():
         print(*result)
 
 
-def latest_versions():
-    session = requests_cache.CachedSession()
+def latest_versions(session):
     response = session.get(MAIN_DOC_URL)
     response.encoding = "utf-8"
     soup = BeautifulSoup(response.text, "lxml")
@@ -65,13 +63,11 @@ def latest_versions():
         print(*row)
 
 
-def download():
+def download(session):
     downloads_url = urljoin(MAIN_DOC_URL, 'download.html')
     necc_dir = BASE_DIR / "downloads"
     necc_dir.mkdir(exist_ok=True)
-    session = requests_cache.CachedSession()
     response = session.get(downloads_url)
-    session.cache.clear()
     soup = BeautifulSoup(response.text, 'lxml')
     table = soup.find("table", class_="docutils").find_all("tr")[1:]
     pattern = r'".+\.zip'
@@ -94,7 +90,12 @@ MODS_OF_WORK = {
     "download": download
 }
 
+
 if __name__ == "__main__":
     parser = configure_parser(MODS_OF_WORK.keys())
-    option = parser.parse_args().mode
-    visov = MODS_OF_WORK[option]()
+    args = parser.parse_args()
+    session = requests_cache.CachedSession()
+    if args.clear:
+        session.cache.clear()
+    mode = parser.parse_args().mode
+    visov = MODS_OF_WORK[mode](session)
