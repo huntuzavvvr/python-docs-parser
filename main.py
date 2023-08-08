@@ -91,7 +91,7 @@ MODS_OF_WORK = {
 }
 
 
-if __name__ == "__main__":
+def main():
     parser = configure_parser(MODS_OF_WORK.keys())
     args = parser.parse_args()
     session = requests_cache.CachedSession()
@@ -99,3 +99,7 @@ if __name__ == "__main__":
         session.cache.clear()
     mode = parser.parse_args().mode
     visov = MODS_OF_WORK[mode](session)
+
+
+if __name__ == "__main__":
+    main()
