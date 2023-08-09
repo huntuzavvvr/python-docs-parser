@@ -3,8 +3,9 @@ from urllib.parse import urljoin
 import requests_cache
 from tqdm import tqdm
 from bs4 import BeautifulSoup
+import logging
 from constants import BASE_DIR, MAIN_DOC_URL
-from configs import configure_parser
+from configs import configure_parser, configure_logging
 from outputs import *
 
 
@@ -82,6 +83,7 @@ def download(session):
                 file.write(response.content)
         except Exception as error:
             pass
+    logging.info(f"Data downloaded in {necc_dir}")
 
 
 MODS_OF_WORK = {
@@ -92,16 +94,19 @@ MODS_OF_WORK = {
 
 
 def main():
+    configure_logging()
+    logging.info("Code is running")
     parser = configure_parser(MODS_OF_WORK.keys())
     args = parser.parse_args()
+    logging.info(f"Arguments: {args}")
     session = requests_cache.CachedSession()
     if args.clear:
         session.cache.clear()
-    mode = parser.parse_args().mode
+    mode = args.mode
     visov = MODS_OF_WORK[mode](session)
     if visov is not None:
         control_output(visov, args)
-
+    logging.info("Work is finished")
 
 if __name__ == "__main__":
     main()

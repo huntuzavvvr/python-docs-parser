@@ -2,6 +2,7 @@ from prettytable import PrettyTable, ALL
 from pathlib import Path
 import datetime as dt
 import csv
+import logging
 from constants import BASE_DIR, DATETIME_FORMAT
 
 
@@ -32,6 +33,7 @@ def file_output(results, args):
     with open(file_path, 'w', encoding='utf-8') as file:
         writer = csv.writer(file, dialect='unix')
         writer.writerows(results)
+    logging.info(f"Data saved in {results_dir}")
 
 
 def default_output(results):
