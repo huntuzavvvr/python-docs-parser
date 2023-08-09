@@ -7,6 +7,7 @@ from constants import BASE_DIR, MAIN_DOC_URL
 from configs import configure_parser
 from outputs import *
 
+
 def whats_new(session):
     whats_new_url = urljoin(MAIN_DOC_URL, 'whatsnew/')
     response = session.get(whats_new_url)
@@ -29,9 +30,6 @@ def whats_new(session):
         descr = sec.find("dl").text
         descr = descr.replace("\n", ' ')
         results.append((full_link, title, descr))
-    # for result in results:
-    #     print(*result)
-    # control_output(results, args)
     return results
 
 
