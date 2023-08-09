@@ -4,7 +4,7 @@ import requests_cache
 from tqdm import tqdm
 from bs4 import BeautifulSoup
 import logging
-from constants import BASE_DIR, MAIN_DOC_URL, DOWNLOADS_URL
+from constants import BASE_DIR, MAIN_DOC_URL
 from configs import configure_parser, configure_logging
 from utils import get_response, find_parse
 from outputs import *
