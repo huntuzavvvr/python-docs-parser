@@ -5,7 +5,7 @@ from tqdm import tqdm
 from bs4 import BeautifulSoup
 from constants import BASE_DIR, MAIN_DOC_URL
 from configs import configure_parser
-
+from outputs import *
 
 def whats_new(session):
     whats_new_url = urljoin(MAIN_DOC_URL, 'whatsnew/')
@@ -14,7 +14,7 @@ def whats_new(session):
     soup = BeautifulSoup(response.text, 'lxml')
     sect = soup.find("section", attrs={"id": "what-s-new-in-python"})
     l1 = sect.find("div").find_all(class_="toctree-l1")
-    results = []
+    results = [("Link to docs", "Name", "Author/Editor")]
     for i in tqdm(l1):
         a = i.find("a")
         href = a.get("href")
@@ -29,8 +29,10 @@ def whats_new(session):
         descr = sec.find("dl").text
         descr = descr.replace("\n", ' ')
         results.append((full_link, title, descr))
-    for result in results:
-        print(*result)
+    # for result in results:
+    #     print(*result)
+    # control_output(results, args)
+    return results
 
 
 def latest_versions(session):
@@ -44,7 +46,7 @@ def latest_versions(session):
             break
     else:
         raise Exception("Nothing")
-    results = []
+    results = [("Link to docs", "Version", "Status")]
     pattern = r'Python (\d.\d+) \((.*)\)'
     for a_tag in a_tags:
         link = a_tag['href']
@@ -52,13 +54,15 @@ def latest_versions(session):
         if text_match is not None:
             version, status = text_match.groups()
         else:
-            version, status = a_tag.text, ''
+            try:
+                version, status = float(a_tag.text), ''
+            except Exception as error:
+                version, status = a_tag.text, ''
         results.append(
             (link, version, status)
         )
         # Печать результата.
-    for row in results:
-        print(*row)
+    return results
 
 
 def download(session):
@@ -97,6 +101,8 @@ def main():
         session.cache.clear()
     mode = parser.parse_args().mode
     visov = MODS_OF_WORK[mode](session)
+    if visov is not None:
+        control_output(visov, args)
 
 
 if __name__ == "__main__":
