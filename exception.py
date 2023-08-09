@@ -1,0 +1,2 @@
+class FindingException(Exception):
+    pass
